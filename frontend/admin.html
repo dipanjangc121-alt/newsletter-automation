@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Newsletter Admin Dashboard</title>
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<div class="dashboard">
+  <h1>📬 Newsletter Admin Panel</h1>
+
+  <form id="newsletterForm">
+
+    <div class="grid">
+      <div>
+        <label>Issue Number</label>
+        <input type="text" id="issue" placeholder="Issue-102" required>
+      </div>
+
+      <div>
+        <label>Month</label>
+        <input type="text" id="month" placeholder="November 2025" required>
+      </div>
+
+      <div>
+        <label>Publish Date</label>
+        <input type="date" id="publishDate" required>
+      </div>
+    </div>
+
+    <hr>
+
+    <h3>Newsletter Section</h3>
+
+    <label>Category</label>
+    <input type="text" id="category" placeholder="Campus News">
+
+    <label>Title</label>
+    <input type="text" id="title" placeholder="Event Title">
+
+    <label>Description</label>
+    <textarea id="description" rows="5" placeholder="Write news content here..."></textarea>
+
+    <label>Upload Image</label>
+    <input type="file" id="image">
+    <img id="preview" />
+
+    <label>External Link</label>
+    <input type="text" id="link" placeholder="https://example.com">
+
+    <div class="actions">
+      <button type="submit">💾 Save Newsletter</button>
+      <button type="button" id="previewBtn">👁 Preview</button>
+    </div>
+
+  </form>
+
+  <pre id="output"></pre>
+</div>
+
+<script src="js/admin.js"></script>
+</body>
+</html>

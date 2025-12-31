@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>{{issue}} | {{month}}</title>
+<style>
+body { font-family: Arial; }
+.section { margin-bottom: 30px; }
+h1 { background: #004080; color: #fff; padding: 10px; }
+h2 { color: #004080; }
+img { max-width: 100%; margin-top: 10px; }
+</style>
+</head>
+<body>
+
+
+<h1>{{issue}} | {{month}}</h1>
+
+
+{{#each sections}}
+<div class="section">
+<h2>{{category}}</h2>
+<h3>{{title}}</h3>
+<p>{{description}}</p>
+{{#if image}}
+<img src="{{image}}" />
+{{/if}}
+</div>
+{{/each}}
+
+
+</body>
+</html>
