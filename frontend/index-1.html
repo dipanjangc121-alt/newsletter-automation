@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Newsletter Admin Panel</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<h1>Newsletter Admin Panel</h1>
+
+
+<form id="newsletterForm">
+<input type="text" id="issue" placeholder="Issue (e.g. Issue-102)" required />
+<input type="text" id="month" placeholder="Month (e.g. November 2025)" required />
+
+
+<h3>Section</h3>
+<input type="text" id="category" placeholder="Category" required />
+<input type="text" id="title" placeholder="Title" required />
+<textarea id="description" placeholder="Description" required></textarea>
+<input type="text" id="image" placeholder="Image filename / URL" />
+<input type="text" id="link" placeholder="Link" />
+
+
+<button type="submit">Create Newsletter</button>
+</form>
+
+
+<hr />
+<h2>Saved Newsletters</h2>
+<pre id="output"></pre>
+
+
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,53 +1,75 @@
-body {
-  font-family: Arial, sans-serif;
-  background: #f4f6f9;
-}
+// ===============================
+// Newsletter Admin Panel Logic
+// ===============================
 
-.dashboard {
-  width: 900px;
-  margin: 30px auto;
-  background: #fff;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,.1);
-}
+// Get form and elements
+const form = document.getElementById('newsletterForm');
+const previewImg = document.getElementById('preview');
+const output = document.getElementById('output');
 
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
-}
+// 🔗 BACKEND API BASE URL (RENDER)
+const API_BASE_URL = 'https://newsletter-backend-mgo0.onrender.com';
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}
+// Image preview when file is selected
+document.getElementById('image').addEventListener('change', function (e) {
+  const file = e.target.files[0];
+  if (file) {
+    previewImg.src = URL.createObjectURL(file);
+    previewImg.style.display = 'block';
+  }
+});
 
-label {
-  font-weight: bold;
-  margin-top: 10px;
-  display: block;
-}
+// Handle form submission
+form.addEventListener('submit', async function (e) {
+  e.preventDefault();
 
-input, textarea {
-  width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-}
+  // Collect form data
+  const data = {
+    issue: document.getElementById('issue').value,
+    month: document.getElementById('month').value,
+    publishDate: document.getElementById('publishDate').value,
+    sections: [
+      {
+        category: document.getElementById('category').value,
+        title: document.getElementById('title').value,
+        description: document.getElementById('description').value,
+        image: previewImg.src || '',
+        link: document.getElementById('link').value
+      }
+    ]
+  };
 
-.actions {
-  margin-top: 20px;
-  display: flex;
-  gap: 15px;
-}
+  try {
+    // Send data to backend API
+    const response = await fetch(`${API_BASE_URL}/api/newsletters`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
 
-button {
-  padding: 10px 20px;
-  cursor: pointer;
-}
+    const result = await response.json();
 
-#preview {
-  max-width: 200px;
-  display: block;
-  margin-top: 10px;
-}
+    if (!response.ok) {
+      throw new Error(result.message || 'Failed to save newsletter');
+    }
+
+    // Show success output
+    output.style.color = 'green';
+    output.textContent =
+      '✅ Newsletter saved successfully!\n\n' +
+      JSON.stringify(result, null, 2);
+
+    // Reset form
+    form.reset();
+    previewImg.style.display = 'none';
+
+  } catch (error) {
+    // Show error output
+    output.style.color = 'red';
+    output.textContent =
+      '❌ Error while saving newsletter:\n' +
+      error.message;
+  }
+});
