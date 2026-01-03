@@ -54,31 +54,35 @@ router.get('/:id/pdf', async (req, res) => {
 
 
 /* EMAIL SENDING */
+/* EMAIL SENDING */
 router.post('/:id/email', async (req, res) => {
   const { to } = req.body;
 
   const newsletter = await Newsletter.findById(req.params.id);
   if (!newsletter) return res.status(404).send('Newsletter not found');
 
-  const pdfPath = path.join(__dirname, '..', 'templates', 'newsletter.pdf');
-
   req.app.render('newsletter', newsletter.toObject(), async (err, html) => {
     if (err) return res.status(500).send(err.message);
 
     try {
+      // ✅ ALWAYS generate PDF before sending email
+      const pdfPath = await generatePDF(html);
+
       await sendNewsletterEmail({
         to,
         subject: `${newsletter.issue} | ${newsletter.month}`,
         html,
-        attachmentPath: fs.existsSync(pdfPath) ? pdfPath : null
+        attachmentPath: pdfPath
       });
 
       res.json({ message: 'Newsletter email sent successfully' });
     } catch (e) {
+      console.error('Email error:', e);
       res.status(500).send(e.message);
     }
   });
 });
+
 
 /* EXPORT — MUST BE LAST */
 module.exports = router;
