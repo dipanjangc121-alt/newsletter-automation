@@ -1,32 +1,53 @@
 const express = require('express');
 const router = express.Router();
-const Newsletter = require('../models/Newsletter');
+const fs = require('fs');
 
-/* TEST ROUTE */
-router.get('/test', (req, res) => {
-  res.json({ message: 'Newsletter API working' });
-});
+const Newsletter = require('../models/Newsletter');
+const upload = require('../middleware/upload');
+const generatePDF = require('../utils/generatePDF');
 
 /* CREATE */
-router.post('/', async (req, res) => {
+router.post('/', upload.single('image'), async (req, res) => {
   try {
-    console.log('Incoming:', req.body);
-    const newsletter = new Newsletter(req.body);
+    const newsletter = new Newsletter({
+      issue: req.body.issue,
+      month: req.body.month,
+      publishDate: req.body.publishDate,
+      category: req.body.category,
+      title: req.body.title,
+      description: req.body.description,
+      link: req.body.link,
+      image: req.file ? `/uploads/${req.file.filename}` : null
+    });
+
     await newsletter.save();
-    res.status(201).json(newsletter);
+    res.status(201).json({ newsletter });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ message: err.message });
   }
 });
 
-/* READ */
+/* GET ALL */
 router.get('/', async (req, res) => {
-  try {
-    const newsletters = await Newsletter.find();
-    res.json(newsletters);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+  const newsletters = await Newsletter.find().sort({ createdAt: -1 });
+  res.json(newsletters);
+});
+
+/* PREVIEW */
+router.get('/:id/preview', async (req, res) => {
+  const newsletter = await Newsletter.findById(req.params.id);
+  if (!newsletter) return res.status(404).send('Not found');
+
+  res.render('newsletter', newsletter.toObject());
+});
+
+/* PDF */
+router.get('/:id/pdf', async (req, res) => {
+  const newsletter = await Newsletter.findById(req.params.id);
+  if (!newsletter) return res.status(404).send('Not found');
+
+  const pdfPath = await generatePDF(newsletter, req);
+  res.download(pdfPath, () => fs.unlinkSync(pdfPath));
 });
 
 module.exports = router;

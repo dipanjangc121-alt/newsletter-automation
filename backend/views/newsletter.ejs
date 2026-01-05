@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>University Newsletter</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f4f6f8;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .newsletter {
+      max-width: 800px;
+      margin: 30px auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 6px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    /* =========================
+       HEADER
+       ========================= */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      border-bottom: 2px solid #0b3c5d;
+      padding-bottom: 15px;
+      margin-bottom: 20px;
+    }
+
+    .header img {
+      max-width: 120px;
+      max-height: 120px;
+      object-fit: contain;
+    }
+
+    .header-text h1 {
+      margin: 0;
+      font-size: 24px;
+      color: #0b3c5d;
+    }
+
+    .header-text p {
+      margin: 4px 0;
+      font-size: 14px;
+      color: #555;
+    }
+
+    /* =========================
+       CONTENT
+       ========================= */
+    .category {
+      font-size: 14px;
+      font-weight: bold;
+      color: #0b3c5d;
+      margin-bottom: 5px;
+    }
+
+    .title {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #222;
+    }
+
+    .description {
+      font-size: 15px;
+      line-height: 1.6;
+      color: #333;
+      margin-bottom: 20px;
+      white-space: pre-line;
+    }
+
+    /* =========================
+       IMAGE
+       ========================= */
+    .news-image {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .news-image img {
+      max-width: 100%;
+      max-height: 350px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    /* =========================
+       FOOTER
+       ========================= */
+    .footer {
+      margin-top: 30px;
+      padding-top: 10px;
+      border-top: 1px solid #ddd;
+      font-size: 13px;
+      color: #666;
+      text-align: center;
+    }
+
+    .footer a {
+      color: #0b3c5d;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="newsletter">
+
+    <!-- HEADER -->
+    <div class="header">
+      <!-- STATIC UNIVERSITY LOGO -->
+      <img src="/images/university-logo.png" alt="University Logo">
+
+      <div class="header-text">
+        <h1>University Newsletter</h1>
+        <p><strong>Issue:</strong> <%= issue %></p>
+        <p><strong>Month:</strong> <%= month %></p>
+        <p>
+          <strong>Date:</strong>
+          <%= publishDate ? new Date(publishDate).toDateString() : '' %>
+        </p>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <% if (category) { %>
+      <div class="category"><%= category %></div>
+    <% } %>
+
+    <div class="title"><%= title %></div>
+
+    <div class="description">
+      <%= description %>
+    </div>
+
+    <!-- NEWS IMAGE -->
+    <% if (image) { %>
+      <div class="news-image">
+        <img src="<%= image %>" alt="News Image">
+      </div>
+    <% } %>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <% if (link) { %>
+        Read more:
+        <a href="<%= link %>" target="_blank"><%= link %></a>
+      <% } %>
+      <p>© <%= new Date().getFullYear() %> University Newsletter</p>
+    </div>
+
+  </div>
+
+</body>
+</html>

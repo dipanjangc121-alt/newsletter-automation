@@ -1,0 +1,25 @@
+{
+  "name": "newsletter-backend",
+  "version": "1.0.0",
+  "description": "Backend for Newsletter Automation",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "author": "Dipanjan Guha Chowdhury",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-handlebars": "^8.0.4",
+    "handlebars": "^4.7.8",
+    "mongoose": "^8.8.0",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.9.15"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  }
+}

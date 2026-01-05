@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-<<<<<<< HEAD
   <title>Newsletter Admin Dashboard</title>
 
   <!-- CSS -->
@@ -97,43 +96,21 @@
       color: white;
     }
   </style>
-=======
-  <title>Newsletter Admin Panel</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="css/admin.css" />
->>>>>>> 30ecef5 (Add university logo)
 </head>
 
 <body>
 
-<<<<<<< HEAD
 <!-- HEADER -->
 <div class="header">
   <h1>📬 Newsletter Admin Panel</h1>
-  <img src="./images/university-logo.png" class="university-logo">
+  <img src="logo.png" alt="University Logo" class="logo" />
 </div>
 
 <!-- DASHBOARD -->
 <div class="dashboard">
-=======
-  <!-- =========================
-       HEADER
-       ========================= -->
-  <header class="admin-header">
-    <div class="title">📬 Newsletter Admin Panel</div>
->>>>>>> 30ecef5 (Add university logo)
 
-    <!-- STATIC UNIVERSITY LOGO -->
-    <img
-      src="./images/university-logo.png"
-      alt="University Logo"
-      class="university-logo"
-    />
-  </header>
+  <form id="newsletterForm">
 
-<<<<<<< HEAD
     <div class="grid">
       <div>
         <label>Issue Number</label>
@@ -224,103 +201,5 @@
   });
 </script>
 
-=======
-  <!-- =========================
-       DASHBOARD
-       ========================= -->
-  <div class="dashboard">
-
-    <form id="newsletterForm" enctype="multipart/form-data">
-
-      <!-- BASIC INFO -->
-      <div class="grid">
-        <div>
-          <label for="issue">Issue Number</label>
-          <input
-            type="text"
-            id="issue"
-            placeholder="Issue-102"
-            required
-          />
-        </div>
-
-        <div>
-          <label for="month">Month</label>
-          <input
-            type="text"
-            id="month"
-            placeholder="November 2025"
-            required
-          />
-        </div>
-
-        <div>
-          <label for="publishDate">Publish Date</label>
-          <input
-            type="date"
-            id="publishDate"
-            required
-          />
-        </div>
-      </div>
-
-      <hr />
-
-      <!-- CONTENT -->
-      <h3>Newsletter Content</h3>
-
-      <label for="category">Category</label>
-      <input
-        type="text"
-        id="category"
-        placeholder="Campus News"
-      />
-
-      <label for="title">Title</label>
-      <input
-        type="text"
-        id="title"
-        placeholder="Event Title"
-        required
-      />
-
-      <label for="description">Description</label>
-      <textarea
-        id="description"
-        rows="5"
-        placeholder="Write news content here..."
-      ></textarea>
-
-      <!-- IMAGE UPLOAD -->
-      <label for="image">Upload News Image</label>
-      <input
-        type="file"
-        id="image"
-        accept="image/*"
-      />
-      <img id="preview" class="preview" />
-
-      <label for="link">External Link</label>
-      <input
-        type="text"
-        id="link"
-        placeholder="https://example.com"
-      />
-
-      <!-- ACTIONS -->
-      <div class="actions">
-        <button type="submit">
-          💾 Save & Generate Preview
-        </button>
-      </div>
-
-    </form>
-
-  </div>
-
-  <!-- JS -->
-  <script src="admin.js"></script>
-
->>>>>>> 30ecef5 (Add university logo)
 </body>
 </html>

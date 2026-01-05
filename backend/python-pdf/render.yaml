@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: newsletter-backend
+    env: node
+    buildCommand: |
+      apt-get update
+      apt-get install -y wkhtmltopdf
+      npm install
+    startCommand: npm start

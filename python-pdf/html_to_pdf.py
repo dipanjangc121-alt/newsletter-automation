@@ -4,22 +4,13 @@ Spyder Editor
 
 This is a temporary script file.
 """
-import sys
 import subprocess
+import sys
 
-if len(sys.argv) != 3:
-    print("Usage: python html_to_pdf.py <input_html> <output_pdf>")
-    sys.exit(1)
-
-input_html = sys.argv[1]
-output_pdf = sys.argv[2]
-
-wkhtmltopdf_path = r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe"
+html_file = sys.argv[1]
+pdf_file = sys.argv[2]
 
 subprocess.run(
-    [wkhtmltopdf_path, input_html, output_pdf],
+    ["wkhtmltopdf", html_file, pdf_file],
     check=True
 )
-
-print("PDF generated successfully:", output_pdf)
-
