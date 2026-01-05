@@ -1,21 +1,19 @@
 const mongoose = require('mongoose');
 
+const NewsletterSchema = new mongoose.Schema(
+  {
+    issue: { type: String, required: true },
+    month: { type: String, required: true },
+    publishDate: Date,
 
-const SectionSchema = new mongoose.Schema({
-category: String,
-title: String,
-description: String,
-image: String,
-link: String
-});
+    category: String,
+    title: { type: String, required: true },
+    description: String,
 
-
-const NewsletterSchema = new mongoose.Schema({
-issue: String,
-month: String,
-sections: [SectionSchema],
-createdAt: { type: Date, default: Date.now }
-});
-
+    image: String,
+    link: String
+  },
+  { timestamps: true }
+);
 
 module.exports = mongoose.model('Newsletter', NewsletterSchema);
