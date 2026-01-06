@@ -34,15 +34,23 @@ router.get('/', async (req, res) => {
 });
 
 /* PREVIEW */
+/* PREVIEW */
 router.get('/:id/preview', async (req, res) => {
-  const newsletter = await Newsletter.findById(req.params.id);
-  if (!newsletter) return res.status(404).send('Not found');
+  try {
+    const newsletter = await Newsletter.findById(req.params.id);
+    if (!newsletter) {
+      return res.status(404).send('Newsletter not found');
+    }
 
-  res.render('newsletter', {
-  newsletter: newsletter.toObject()
+    res.render('newsletter', {
+      newsletter: newsletter.toObject()
+    });
+  } catch (err) {
+    console.error('Preview error:', err);
+    res.status(500).send('Preview error');
+  }
 });
 
-});
 
 /* PDF */
 router.get('/:id/pdf', async (req, res) => {
