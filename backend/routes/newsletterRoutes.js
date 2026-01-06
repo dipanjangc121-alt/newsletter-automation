@@ -38,7 +38,10 @@ router.get('/:id/preview', async (req, res) => {
   const newsletter = await Newsletter.findById(req.params.id);
   if (!newsletter) return res.status(404).send('Not found');
 
-  res.render('newsletter', newsletter.toObject());
+  res.render('newsletter', {
+  newsletter: newsletter.toObject()
+});
+
 });
 
 /* PDF */
