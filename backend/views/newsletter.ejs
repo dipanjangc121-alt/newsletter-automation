@@ -104,8 +104,11 @@
 
     <!-- HEADER -->
     <div class="header">
-      <!-- STATIC UNIVERSITY LOGO -->
-      <img src="/images/university-logo.png" alt="University Logo">
+      <!-- ✅ UNIVERSITY LOGO (ABSOLUTE PUBLIC URL) -->
+      <img
+        src="<%= baseUrl %>/images/university-logo.png"
+        alt="University Logo"
+      />
 
       <div class="header-text">
         <h1>University Newsletter</h1>
@@ -140,10 +143,13 @@
       </div>
     <% } %>
 
-    <!-- NEWS IMAGE -->
+    <!-- ✅ NEWS IMAGE (ABSOLUTE URL) -->
     <% if (newsletter.image) { %>
       <div class="news-image">
-        <img src="<%= newsletter.image %>" alt="News Image">
+        <img
+          src="<%= baseUrl + newsletter.image %>"
+          alt="News Image"
+        />
       </div>
     <% } %>
 

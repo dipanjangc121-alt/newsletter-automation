@@ -1,13 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const fs = require('fs');
-const ejs = require('ejs');
-const path = require('path');
-const { sendNewsletterEmail } = require('../utils/mailer');
 
 const Newsletter = require('../models/Newsletter');
 const upload = require('../middleware/upload');
 const generatePDF = require('../utils/generatePDF');
+const { sendNewsletterEmail } = require('../utils/mailer');
 
 /* CREATE */
 router.post('/', upload.single('image'), async (req, res) => {
@@ -36,16 +34,15 @@ router.get('/', async (req, res) => {
   res.json(newsletters);
 });
 
-/* PREVIEW */
+/* PREVIEW (✅ baseUrl INCLUDED) */
 router.get('/:id/preview', async (req, res) => {
   try {
     const newsletter = await Newsletter.findById(req.params.id);
-    if (!newsletter) {
-      return res.status(404).send('Newsletter not found');
-    }
+    if (!newsletter) return res.status(404).send('Not found');
 
     res.render('newsletter', {
-      newsletter: newsletter.toObject()
+      newsletter: newsletter.toObject(),
+      baseUrl: process.env.BASE_URL
     });
   } catch (err) {
     console.error('Preview error:', err);
@@ -53,19 +50,13 @@ router.get('/:id/preview', async (req, res) => {
   }
 });
 
-
-/* PDF */
+/* PDF DOWNLOAD (✅ CORRECT USAGE) */
 router.get('/:id/pdf', async (req, res) => {
   try {
     const newsletter = await Newsletter.findById(req.params.id);
     if (!newsletter) return res.status(404).send('Not found');
 
-    const html = await ejs.renderFile(
-      path.join(__dirname, '../views/newsletter.ejs'),
-      { newsletter: newsletter.toObject() }
-    );
-
-    const pdfPath = await generatePDF(html);
+    const pdfPath = await generatePDF(newsletter);
 
     res.download(pdfPath, () => {
       if (fs.existsSync(pdfPath)) fs.unlinkSync(pdfPath);
@@ -77,10 +68,9 @@ router.get('/:id/pdf', async (req, res) => {
   }
 });
 
-/* CREATE + PDF + EMAIL */
+/* CREATE + PDF + EMAIL (✅ COMPLETE FLOW) */
 router.post('/generate', upload.single('image'), async (req, res) => {
   try {
-    // 1️⃣ Save newsletter
     const newsletter = new Newsletter({
       issue: req.body.issue,
       month: req.body.month,
@@ -94,22 +84,13 @@ router.post('/generate', upload.single('image'), async (req, res) => {
 
     const savedNewsletter = await newsletter.save();
 
-    // 2️⃣ Render EJS → HTML
-    const html = await ejs.renderFile(
-      path.join(__dirname, '../views/newsletter.ejs'),
-      { newsletter: savedNewsletter.toObject() }
-    );
+    const pdfPath = await generatePDF(savedNewsletter);
 
-    // 3️⃣ Generate PDF
-    const pdfPath = await generatePDF(html);
-
-    // 4️⃣ Send Email with PDF
     await sendNewsletterEmail(
-      process.env.EMAIL_TO,   // recipient
+      process.env.EMAIL_TO,
       pdfPath
     );
 
-    // 5️⃣ Respond with ID
     res.status(201).json({
       success: true,
       id: savedNewsletter._id
@@ -120,6 +101,5 @@ router.post('/generate', upload.single('image'), async (req, res) => {
     res.status(500).json({ error: 'Generation failed' });
   }
 });
-
 
 module.exports = router;

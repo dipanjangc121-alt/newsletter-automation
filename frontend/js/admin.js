@@ -15,7 +15,7 @@ const previewImg = document.getElementById('preview');
 const API_BASE_URL = 'https://newsletter-backend-mgo0.onrender.com';
 
 // ---------------------------------
-// Image preview
+// Image preview + size validation
 // ---------------------------------
 imageInput.addEventListener('change', function (e) {
   const file = e.target.files[0];
@@ -60,21 +60,24 @@ form.addEventListener('submit', async function (e) {
       formData.append('image', imageInput.files[0]);
     }
 
-    const response = await fetch(`${API_BASE_URL}/api/newsletters`, {
-      method: 'POST',
-      body: formData
-    });
+    // 🔥 CALL FULL GENERATE ENDPOINT
+    const response = await fetch(
+      `${API_BASE_URL}/api/newsletters/generate`,
+      {
+        method: 'POST',
+        body: formData
+      }
+    );
 
     const result = await response.json();
 
-    if (!response.ok) {
-      throw new Error(result.message || 'Failed to save newsletter');
+    if (!response.ok || !result.id) {
+      throw new Error(result.error || 'Failed to generate newsletter');
     }
 
-    // ✅ FIXED ID ACCESS
-    const newsletterId = result.newsletter._id;
+    const newsletterId = result.id;
 
-    // Open preview
+    // ✅ OPEN PREVIEW AUTOMATICALLY
     window.open(
       `${API_BASE_URL}/api/newsletters/${newsletterId}/preview`,
       '_blank'
@@ -84,8 +87,10 @@ form.addEventListener('submit', async function (e) {
     form.reset();
     previewImg.style.display = 'none';
 
+    alert('✅ Newsletter generated, emailed, and preview opened');
+
   } catch (error) {
-    alert('❌ Error while saving newsletter:\n' + error.message);
     console.error(error);
+    alert('❌ Error:\n' + error.message);
   }
 });

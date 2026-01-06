@@ -3,17 +3,15 @@
   "version": "1.0.0",
   "description": "Automated Newsletter System",
   "main": "server.js",
-
   "engines": {
     "node": "18.x"
   },
-
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js"
   },
-
   "dependencies": {
+    "@sparticuz/chromium": "^123.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.9",
@@ -21,10 +19,8 @@
     "mongoose": "^8.0.0",
     "multer": "^2.0.2",
     "nodemailer": "^6.9.7",
-    "puppeteer-core": "^21.6.0",
-    "@sparticuz/chromium": "^123.0.1"
+    "puppeteer-core": "^21.11.0"
   },
-
   "devDependencies": {
     "nodemon": "^3.0.2"
   }

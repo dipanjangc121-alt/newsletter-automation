@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 const path = require('path');
 const fs = require('fs');
 
-module.exports = async function generatePDF(newsletter) {
+module.exports = async function generatePDF(html) {
   let browser;
 
   try {
@@ -18,43 +18,54 @@ module.exports = async function generatePDF(newsletter) {
 
     const page = await browser.newPage();
 
-    const previewURL = `https://newsletter-backend-mgo0.onrender.com/api/newsletters/${newsletter._id}/preview`;
-
-    // Load preview page
-    await page.goto(previewURL, {
-      waitUntil: 'networkidle0',
-      timeout: 0
+    // ✅ IMPORTANT: Set HTML content and WAIT for network & images
+    await page.setContent(html, {
+      waitUntil: 'networkidle0'
     });
 
-    // 🔥 WAIT FOR ALL IMAGES (THIS FIXES PDF IMAGE ISSUE)
+    // ✅ EXTRA SAFETY: Ensure all images are fully loaded
     await page.evaluate(async () => {
       const images = Array.from(document.images);
       await Promise.all(
         images.map(img => {
-          if (img.complete) return;
+          if (img.complete && img.naturalHeight !== 0) return;
           return new Promise(resolve => {
-            img.onload = img.onerror = resolve;
+            img.onload = resolve;
+            img.onerror = resolve;
           });
         })
       );
     });
 
+    // ✅ Ensure pdf directory exists
     const pdfDir = path.join(__dirname, '../pdfs');
-    if (!fs.existsSync(pdfDir)) fs.mkdirSync(pdfDir);
+    if (!fs.existsSync(pdfDir)) {
+      fs.mkdirSync(pdfDir, { recursive: true });
+    }
 
-    const pdfPath = path.join(pdfDir, `${newsletter._id}.pdf`);
+    const pdfPath = path.join(pdfDir, `newsletter-${Date.now()}.pdf`);
 
+    // ✅ Generate PDF
     await page.pdf({
       path: pdfPath,
       format: 'A4',
-      printBackground: true
+      printBackground: true,
+      margin: {
+        top: '20mm',
+        bottom: '20mm',
+        left: '15mm',
+        right: '15mm'
+      }
     });
 
     return pdfPath;
+
   } catch (err) {
-    console.error('PDF ERROR:', err);
+    console.error('❌ PDF GENERATION ERROR:', err);
     throw err;
   } finally {
-    if (browser) await browser.close();
+    if (browser) {
+      await browser.close();
+    }
   }
 };
