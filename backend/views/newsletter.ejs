@@ -21,9 +21,6 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
 
-    /* =========================
-       HEADER
-       ========================= */
     .header {
       display: flex;
       align-items: center;
@@ -51,9 +48,6 @@
       color: #555;
     }
 
-    /* =========================
-       CONTENT
-       ========================= */
     .category {
       font-size: 14px;
       font-weight: bold;
@@ -76,9 +70,6 @@
       white-space: pre-line;
     }
 
-    /* =========================
-       IMAGE
-       ========================= */
     .news-image {
       text-align: center;
       margin: 20px 0;
@@ -92,9 +83,6 @@
       border: 1px solid #ccc;
     }
 
-    /* =========================
-       FOOTER
-       ========================= */
     .footer {
       margin-top: 30px;
       padding-top: 10px;
@@ -112,7 +100,6 @@
 </head>
 
 <body>
-
   <div class="newsletter">
 
     <!-- HEADER -->
@@ -122,43 +109,55 @@
 
       <div class="header-text">
         <h1>University Newsletter</h1>
-        <p><strong>Issue:</strong> <%= issue %></p>
-        <p><strong>Month:</strong> <%= month %></p>
-        <p>
-          <strong>Date:</strong>
-          <%= publishDate ? new Date(publishDate).toDateString() : '' %>
-        </p>
+
+        <% if (newsletter.issue) { %>
+          <p><strong>Issue:</strong> <%= newsletter.issue %></p>
+        <% } %>
+
+        <% if (newsletter.month) { %>
+          <p><strong>Month:</strong> <%= newsletter.month %></p>
+        <% } %>
+
+        <% if (newsletter.publishDate) { %>
+          <p>
+            <strong>Date:</strong>
+            <%= new Date(newsletter.publishDate).toDateString() %>
+          </p>
+        <% } %>
       </div>
     </div>
 
     <!-- CONTENT -->
-    <% if (category) { %>
-      <div class="category"><%= category %></div>
+    <% if (newsletter.category) { %>
+      <div class="category"><%= newsletter.category %></div>
     <% } %>
 
-    <div class="title"><%= title %></div>
+    <div class="title"><%= newsletter.title %></div>
 
-    <div class="description">
-      <%= description %>
-    </div>
+    <% if (newsletter.description) { %>
+      <div class="description">
+        <%= newsletter.description %>
+      </div>
+    <% } %>
 
     <!-- NEWS IMAGE -->
-    <% if (image) { %>
+    <% if (newsletter.image) { %>
       <div class="news-image">
-        <img src="<%= image %>" alt="News Image">
+        <img src="<%= newsletter.image %>" alt="News Image">
       </div>
     <% } %>
 
     <!-- FOOTER -->
     <div class="footer">
-      <% if (link) { %>
+      <% if (newsletter.link) { %>
         Read more:
-        <a href="<%= link %>" target="_blank"><%= link %></a>
+        <a href="<%= newsletter.link %>" target="_blank">
+          <%= newsletter.link %>
+        </a>
       <% } %>
       <p>© <%= new Date().getFullYear() %> University Newsletter</p>
     </div>
 
   </div>
-
 </body>
 </html>
