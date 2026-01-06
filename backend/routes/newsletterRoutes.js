@@ -43,11 +43,25 @@ router.get('/:id/preview', async (req, res) => {
 
 /* PDF */
 router.get('/:id/pdf', async (req, res) => {
-  const newsletter = await Newsletter.findById(req.params.id);
-  if (!newsletter) return res.status(404).send('Not found');
+  try {
+    const newsletter = await Newsletter.findById(req.params.id);
+    if (!newsletter) return res.status(404).send('Not found');
 
-  const pdfPath = await generatePDF(newsletter, req);
-  res.download(pdfPath, () => fs.unlinkSync(pdfPath));
+    const ejs = require('ejs');
+    const path = require('path');
+
+    const html = await ejs.renderFile(
+      path.join(__dirname, '../views/newsletter.ejs'),
+      newsletter.toObject()
+    );
+
+    const pdfPath = await generatePDF(html);
+    res.download(pdfPath, () => fs.unlinkSync(pdfPath));
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('PDF generation failed');
+  }
 });
 
 module.exports = router;
