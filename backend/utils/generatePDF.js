@@ -1,14 +1,20 @@
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-core');
+const chromium = require('@sparticuz/chromium');
 const path = require('path');
+const fs = require('fs');
 
 const generatePDF = async (html) => {
+  // Ensure temp folder exists
+  const tempDir = path.join(__dirname, '../temp');
+  if (!fs.existsSync(tempDir)) {
+    fs.mkdirSync(tempDir, { recursive: true });
+  }
+
   const browser = await puppeteer.launch({
-  headless: 'new',
-  args: [
-    '--no-sandbox',
-    '--disable-setuid-sandbox'
-  ]
-});
+    args: chromium.args,
+    executablePath: await chromium.executablePath(),
+    headless: chromium.headless,
+  });
 
   const page = await browser.newPage();
 
@@ -16,7 +22,7 @@ const generatePDF = async (html) => {
     waitUntil: 'networkidle0'
   });
 
-  const pdfPath = path.join(__dirname, '../temp/newsletter.pdf');
+  const pdfPath = path.join(tempDir, 'newsletter.pdf');
 
   await page.pdf({
     path: pdfPath,
@@ -29,4 +35,3 @@ const generatePDF = async (html) => {
 };
 
 module.exports = generatePDF;
-
