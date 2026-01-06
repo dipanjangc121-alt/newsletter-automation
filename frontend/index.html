@@ -2,130 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-<<<<<<< HEAD
-  <title>Newsletter Admin Dashboard</title>
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="css/admin.css" />
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
-      margin: 0;
-    }
-
-    /* HEADER */
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #0b3c5d;
-      color: white;
-      padding: 14px 24px;
-    }
-
-    .header h1 {
-      margin: 0;
-      font-size: 22px;
-    }
-
-    .logo {
-      height: 50px;
-    }
-
-    /* DASHBOARD */
-    .dashboard {
-      max-width: 900px;
-      margin: 30px auto;
-      background: white;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-    }
-
-    label {
-      font-weight: bold;
-      margin-top: 15px;
-      display: block;
-    }
-
-    input, textarea {
-      width: 100%;
-      padding: 10px;
-      margin-top: 6px;
-    }
-
-    textarea {
-      resize: vertical;
-    }
-
-    img#preview {
-      margin-top: 10px;
-      max-width: 100%;
-      display: none;
-      border: 1px solid #ccc;
-    }
-
-    .actions {
-      margin-top: 25px;
-      display: flex;
-      gap: 15px;
-    }
-
-    button {
-      padding: 12px 20px;
-      border: none;
-      cursor: pointer;
-      font-size: 15px;
-      border-radius: 5px;
-    }
-
-    button[type="submit"] {
-      background: #0b3c5d;
-      color: white;
-    }
-
-    #previewBtn {
-      background: #6c757d;
-      color: white;
-    }
-  </style>
-=======
   <title>Newsletter Admin Panel</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- CSS -->
   <link rel="stylesheet" href="css/admin.css" />
->>>>>>> 30ecef5 (Add university logo)
 </head>
 
 <body>
 
-<<<<<<< HEAD
-<!-- HEADER -->
-<div class="header">
-  <h1>📬 Newsletter Admin Panel</h1>
-  <img src="./images/university-logo.png" class="university-logo">
-</div>
-
-<!-- DASHBOARD -->
-<div class="dashboard">
-=======
   <!-- =========================
        HEADER
        ========================= -->
   <header class="admin-header">
     <div class="title">📬 Newsletter Admin Panel</div>
->>>>>>> 30ecef5 (Add university logo)
 
-    <!-- STATIC UNIVERSITY LOGO -->
+    <!-- UNIVERSITY LOGO -->
     <img
       src="./images/university-logo.png"
       alt="University Logo"
@@ -133,98 +25,6 @@
     />
   </header>
 
-<<<<<<< HEAD
-    <div class="grid">
-      <div>
-        <label>Issue Number</label>
-        <input type="text" id="issue" required />
-      </div>
-
-      <div>
-        <label>Month</label>
-        <input type="text" id="month" required />
-      </div>
-
-      <div>
-        <label>Publish Date</label>
-        <input type="date" id="publishDate" required />
-      </div>
-    </div>
-
-    <hr />
-
-    <h3>Newsletter Content</h3>
-
-    <label>Category</label>
-    <input type="text" id="category" />
-
-    <label>Title</label>
-    <input type="text" id="title" required />
-
-    <label>Description</label>
-    <textarea id="description" rows="5"></textarea>
-
-    <label>Upload Image</label>
-    <input type="file" id="image" accept="image/*" />
-    <img id="preview" />
-
-    <label>External Link</label>
-    <input type="text" id="link" />
-
-    <div class="actions">
-      <button type="submit">💾 Save & Generate</button>
-      <button type="button" id="previewBtn">👁 Preview Last</button>
-    </div>
-
-  </form>
-
-</div>
-
-<!-- SCRIPT -->
-<script>
-  const form = document.getElementById("newsletterForm");
-  const imageInput = document.getElementById("image");
-  const previewImg = document.getElementById("preview");
-
-  // IMAGE PREVIEW
-  imageInput.addEventListener("change", () => {
-    const file = imageInput.files[0];
-    if (file) {
-      previewImg.src = URL.createObjectURL(file);
-      previewImg.style.display = "block";
-    }
-  });
-
-  // SAVE + AUTO PREVIEW
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const formData = new FormData();
-    formData.append("issue", issue.value);
-    formData.append("month", month.value);
-    formData.append("publishDate", publishDate.value);
-    formData.append("category", category.value);
-    formData.append("title", title.value);
-    formData.append("description", description.value);
-    formData.append("link", link.value);
-    formData.append("image", imageInput.files[0]);
-
-    const res = await fetch("http://localhost:3000/api/newsletters", {
-      method: "POST",
-      body: formData
-    });
-
-    const data = await res.json();
-
-    // 🔥 AUTO OPEN PREVIEW
-    window.open(
-      `http://localhost:3000/api/newsletters/${data._id}/preview`,
-      "_blank"
-    );
-  });
-</script>
-
-=======
   <!-- =========================
        DASHBOARD
        ========================= -->
@@ -236,31 +36,17 @@
       <div class="grid">
         <div>
           <label for="issue">Issue Number</label>
-          <input
-            type="text"
-            id="issue"
-            placeholder="Issue-102"
-            required
-          />
+          <input type="text" id="issue" placeholder="Issue-102" required />
         </div>
 
         <div>
           <label for="month">Month</label>
-          <input
-            type="text"
-            id="month"
-            placeholder="November 2025"
-            required
-          />
+          <input type="text" id="month" placeholder="November 2025" required />
         </div>
 
         <div>
           <label for="publishDate">Publish Date</label>
-          <input
-            type="date"
-            id="publishDate"
-            required
-          />
+          <input type="date" id="publishDate" required />
         </div>
       </div>
 
@@ -270,19 +56,10 @@
       <h3>Newsletter Content</h3>
 
       <label for="category">Category</label>
-      <input
-        type="text"
-        id="category"
-        placeholder="Campus News"
-      />
+      <input type="text" id="category" placeholder="Campus News" />
 
       <label for="title">Title</label>
-      <input
-        type="text"
-        id="title"
-        placeholder="Event Title"
-        required
-      />
+      <input type="text" id="title" placeholder="Event Title" required />
 
       <label for="description">Description</label>
       <textarea
@@ -293,25 +70,15 @@
 
       <!-- IMAGE UPLOAD -->
       <label for="image">Upload News Image</label>
-      <input
-        type="file"
-        id="image"
-        accept="image/*"
-      />
+      <input type="file" id="image" accept="image/*" />
       <img id="preview" class="preview" />
 
       <label for="link">External Link</label>
-      <input
-        type="text"
-        id="link"
-        placeholder="https://example.com"
-      />
+      <input type="text" id="link" placeholder="https://example.com" />
 
       <!-- ACTIONS -->
       <div class="actions">
-        <button type="submit">
-          💾 Save & Generate Preview
-        </button>
+        <button type="submit">💾 Save & Generate Preview</button>
       </div>
 
     </form>
@@ -321,6 +88,5 @@
   <!-- JS -->
   <script src="admin.js"></script>
 
->>>>>>> 30ecef5 (Add university logo)
 </body>
 </html>
