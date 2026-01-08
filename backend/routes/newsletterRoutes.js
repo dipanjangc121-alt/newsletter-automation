@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const fs = require('fs');
+const path = require('path');
 
 const Newsletter = require('../models/Newsletter');
 const upload = require('../middleware/upload');
@@ -10,6 +11,8 @@ const { sendNewsletterEmail } = require('../utils/mailer');
 /* CREATE */
 router.post('/', upload.single('image'), async (req, res) => {
   try {
+    const baseUrl = `${req.protocol}://${req.get('host')}`;
+
     const newsletter = new Newsletter({
       issue: req.body.issue,
       month: req.body.month,
@@ -18,12 +21,14 @@ router.post('/', upload.single('image'), async (req, res) => {
       title: req.body.title,
       description: req.body.description,
       link: req.body.link,
-      image: req.file ? `/uploads/${req.file.filename}` : null
+      image: req.file ? `${baseUrl}/uploads/${req.file.filename}` : null // ✅ FIX
     });
 
     await newsletter.save();
     res.status(201).json({ newsletter });
+
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: err.message });
   }
 });
@@ -34,33 +39,44 @@ router.get('/', async (req, res) => {
   res.json(newsletters);
 });
 
-/* PREVIEW (✅ baseUrl INCLUDED) */
+/* PREVIEW */
 router.get('/:id/preview', async (req, res) => {
   try {
     const newsletter = await Newsletter.findById(req.params.id);
     if (!newsletter) return res.status(404).send('Not found');
 
     res.render('newsletter', {
-      newsletter: newsletter.toObject(),
-      baseUrl: process.env.BASE_URL
+      newsletter: newsletter.toObject()
     });
+
   } catch (err) {
     console.error('Preview error:', err);
     res.status(500).send('Preview error');
   }
 });
 
-/* PDF DOWNLOAD (✅ CORRECT USAGE) */
+/* PDF DOWNLOAD */
 router.get('/:id/pdf', async (req, res) => {
   try {
     const newsletter = await Newsletter.findById(req.params.id);
     if (!newsletter) return res.status(404).send('Not found');
 
-    const pdfPath = await generatePDF(newsletter);
-
-    res.download(pdfPath, () => {
-      if (fs.existsSync(pdfPath)) fs.unlinkSync(pdfPath);
+    const html = await new Promise((resolve, reject) => {
+      req.app.render(
+        'newsletter',
+        { newsletter: newsletter.toObject() },
+        (err, html) => (err ? reject(err) : resolve(html))
+      );
     });
+
+    const pdfBuffer = await generatePDF(html);
+
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': 'attachment; filename=newsletter.pdf'
+    });
+
+    res.send(pdfBuffer);
 
   } catch (err) {
     console.error(err);
@@ -68,9 +84,11 @@ router.get('/:id/pdf', async (req, res) => {
   }
 });
 
-/* CREATE + PDF + EMAIL (✅ COMPLETE FLOW) */
+/* CREATE + PDF + EMAIL */
 router.post('/generate', upload.single('image'), async (req, res) => {
   try {
+    const baseUrl = `${req.protocol}://${req.get('host')}`;
+
     const newsletter = new Newsletter({
       issue: req.body.issue,
       month: req.body.month,
@@ -79,16 +97,24 @@ router.post('/generate', upload.single('image'), async (req, res) => {
       title: req.body.title,
       description: req.body.description,
       link: req.body.link,
-      image: req.file ? `/uploads/${req.file.filename}` : null
+      image: req.file ? `${baseUrl}/uploads/${req.file.filename}` : null // ✅ FIX
     });
 
     const savedNewsletter = await newsletter.save();
 
-    const pdfPath = await generatePDF(savedNewsletter);
+    const html = await new Promise((resolve, reject) => {
+      req.app.render(
+        'newsletter',
+        { newsletter: savedNewsletter.toObject() },
+        (err, html) => (err ? reject(err) : resolve(html))
+      );
+    });
+
+    const pdfBuffer = await generatePDF(html);
 
     await sendNewsletterEmail(
       process.env.EMAIL_TO,
-      pdfPath
+      pdfBuffer
     );
 
     res.status(201).json({

@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 
 /* STATIC */
 app.use(express.static('public'));
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 /* VIEW ENGINE */
 app.set('view engine', 'ejs');
@@ -30,21 +30,6 @@ app.use('/api/newsletters', require('./routes/newsletterRoutes'));
 /* TEST */
 app.get('/', (req, res) => {
   res.send('Backend is running');
-});
-
-/* MAIL TEST */
-app.get('/mail-test', async (req, res) => {
-  try {
-    await transporter.sendMail({
-      from: process.env.EMAIL_FROM,
-      to: process.env.EMAIL_USER,
-      subject: 'Test Mail',
-      text: 'Email system working successfully'
-    });
-    res.send('Mail sent successfully');
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
 });
 
 /* START */
