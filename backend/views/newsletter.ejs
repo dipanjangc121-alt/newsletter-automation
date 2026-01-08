@@ -104,10 +104,11 @@
 
     <!-- HEADER -->
     <div class="header">
-      <!-- ✅ UNIVERSITY LOGO (ABSOLUTE PUBLIC URL) -->
+      <!-- ✅ UNIVERSITY LOGO (PUBLIC ABSOLUTE URL) -->
       <img
-        src="<%= baseUrl %>/images/university-logo.png"
+        src="https://newsletter-backend-mgo0.onrender.com/images/university-logo.png"
         alt="University Logo"
+        style="height:60px"
       />
 
       <div class="header-text">
@@ -143,11 +144,11 @@
       </div>
     <% } %>
 
-    <!-- ✅ NEWS IMAGE (ABSOLUTE URL) -->
+    <!-- ✅ NEWS IMAGE -->
     <% if (newsletter.image) { %>
       <div class="news-image">
         <img
-          src="<%= baseUrl + newsletter.image %>"
+          src="<%= newsletter.image %>"
           alt="News Image"
         />
       </div>
