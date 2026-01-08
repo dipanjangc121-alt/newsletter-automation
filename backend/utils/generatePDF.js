@@ -1,27 +1,31 @@
-const puppeteer = require("puppeteer-core");
-const chromium = require("@sparticuz/chromium");
-const path = require("path");
-const fs = require("fs");
+const puppeteer = require('puppeteer-core');
+
+const CHROME_PATH =
+  process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium';
 
 module.exports = async function generatePDF(html) {
   let browser;
 
   try {
     browser = await puppeteer.launch({
-      args: chromium.args,
-      executablePath: await chromium.executablePath(),
-      headless: chromium.headless,
-      defaultViewport: chromium.defaultViewport
+      executablePath: CHROME_PATH,
+      headless: true,
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+        '--single-process'
+      ]
     });
 
     const page = await browser.newPage();
 
-    // ✅ Load HTML and wait for network
     await page.setContent(html, {
-      waitUntil: "networkidle0"
+      waitUntil: 'networkidle0'
     });
 
-    // ✅ Ensure all images are loaded
+    // ✅ Ensure images are fully loaded
     await page.evaluate(async () => {
       const images = Array.from(document.images);
       await Promise.all(
@@ -35,31 +39,22 @@ module.exports = async function generatePDF(html) {
       );
     });
 
-    // ✅ Ensure pdf directory exists
-    const pdfDir = path.join(__dirname, "../pdfs");
-    if (!fs.existsSync(pdfDir)) {
-      fs.mkdirSync(pdfDir, { recursive: true });
-    }
-
-    const pdfPath = path.join(pdfDir, `newsletter-${Date.now()}.pdf`);
-
-    // ✅ Generate PDF
-    await page.pdf({
-      path: pdfPath,
-      format: "A4",
+    // ✅ Generate PDF as BUFFER (Render-safe)
+    const pdfBuffer = await page.pdf({
+      format: 'A4',
       printBackground: true,
       margin: {
-        top: "20mm",
-        bottom: "20mm",
-        left: "15mm",
-        right: "15mm"
+        top: '20mm',
+        bottom: '20mm',
+        left: '15mm',
+        right: '15mm'
       }
     });
 
-    return pdfPath;
+    return pdfBuffer;
 
   } catch (err) {
-    console.error("❌ PDF GENERATION ERROR:", err);
+    console.error('❌ PDF GENERATION ERROR:', err);
     throw err;
   } finally {
     if (browser) {
